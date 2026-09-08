@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek DPS Pilkades Tundagan</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+        body{background:#f0f4f8;padding:20px}
+        .container{max-width:480px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.08);padding:28px}
+        .header{text-align:center;margin-bottom:20px}
+        .header h1{font-size:17px;color:#1a202c;font-weight:700;text-transform:uppercase}
+        .countdown-box{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:18px;border-radius:10px;text-align:center;margin-bottom:24px}
+        .countdown-box h2{font-size:15px;font-weight:600;margin-bottom:6px}
+        .countdown-date{font-size:14px;margin-bottom:14px;opacity:.95}
+        .countdown-numbers{display:flex;justify-content:center;gap:10px}
+        .cd-item{background:rgba(255,255,255,.2);border-radius:8px;padding:10px 8px;min-width:62px}
+        .cd-val{font-size:24px;font-weight:700}
+        .cd-lab{font-size:11px;opacity:.85;margin-top:2px}
+        .step-indicator{display:flex;justify-content:center;gap:8px;margin-bottom:20px}
+        .step{width:36px;height:36px;border-radius:50%;background:#e2e8f0;color:#64748b;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600}
+        .step.active{background:#2563eb;color:#fff}
+        .step-line{height:2px;background:#e2e8f0;width:30px;align-self:center}
+        .form-group{margin-bottom:20px}
+        label{display:block;font-size:14px;color:#374151;margin-bottom:8px}
+        input{width:100%;padding:12px 14px;font-size:16px;border:1px solid #d1d5db;border-radius:8px;outline:none}
+        input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+        button{width:100%;padding:13px;background:#2563eb;color:#fff;font-size:15px;font-weight:600;border:none;border-radius:8px;cursor:pointer}
+        button:hover{background:#1d4ed8}
+        .btn-wa{background:#22c55e;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:8px}
+        .btn-wa:hover{background:#16a34a}
+        .result-box{margin-top:24px;padding:20px;border-radius:8px;display:none}
+        .result-box.success{display:block;background:#f0fdf4;border:1px solid #bbf7d0}
+        .result-box.notfound{display:block;background:#fef2f2;border:1px solid #fecaca}
+        .result-box h3{font-size:15px;margin-bottom:16px;color:#166534}
+        .result-box.notfound h3{color:#dc2626}
+        .data-row{display:flex;padding:6px 0;border-bottom:1px solid #e5e7eb;font-size:14px;flex-wrap:wrap}
+        .data-row:last-child{border-bottom:none}
+        .data-label{width:100px;color:#4b5563;font-weight:500;flex-shrink:0}
+        .data-value{flex:1;color:#1f2937;font-weight:500}
+        .footer-note{margin-top:20px;font-size:12px;color:#6b7280;text-align:center;line-height:1.6}
+        .back-link{display:inline-block;margin-top:18px;font-size:14px;color:#2563eb;text-decoration:none;cursor:pointer}
+        .back-link:hover{text-decoration:underline}
+        .hidden{display:none!important}
+        .error-text{margin-top:6px;font-size:12px;color:#dc2626}
+        .loading{text-align:center;padding:12px;color:#4b5563;font-size:13px}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Panitia Pemilihan Kepala Desa Tundagan 2026</h1>
+    </div>
+
+    <div class="countdown-box">
+        <h2>PELAKSANAAN PEMUNGUTAN SUARA</h2>
+        <div class="countdown-date">Senin Pahing — 09 November 2026</div>
+        <div class="countdown-numbers">
+            <div class="cd-item"><div class="cd-val" id="cd-hari">0</div><div class="cd-lab">Hari</div></div>
+            <div class="cd-item"><div class="cd-val" id="cd-jam">0</div><div class="cd-lab">Jam</div></div>
+            <div class="cd-item"><div class="cd-val" id="cd-menit">0</div><div class="cd-lab">Menit</div></div>
+            <div class="cd-item"><div class="cd-val" id="cd-detik">0</div><div class="cd-lab">Detik</div></div>
+        </div>
+    </div>
+
+    <div id="step1">
+        <div class="step-indicator">
+            <div class="step active">1</div><div class="step-line"></div><div class="step">2</div>
+        </div>
+        <div class="form-group">
+            <label>Masukkan Nomor Induk Kependudukan (NIK)</label>
+            <input type="text" id="nikInput" maxlength="16" placeholder="16 Digit NIK sesuai e-KTP">
+            <div id="nikError" class="error-text hidden">NIK harus 16 digit angka</div>
+        </div>
+        <button id="btnCek">Cek Data Pemilih</button>
+        <div id="statusMuat" class="loading">⏳ Sedang memuat data...</div>
+        <div class="footer-note">📍 Sekretariat:<br>Jl. Desa Tundagan RT 04/RW 04<br>Kecamatan Watukumpul, Kabupaten Pemalang</div>
+    </div>
+
+    <div id="step2" class="hidden">
+        <div class="step-indicator">
+            <div class="step active">✓</div><div class="step-line"></div><div class="step active">2</div>
+        </div>
+        <div id="resultArea"></div>
+        <a class="back-link" onclick="kembaliKeLangkah1()">← Kembali Cek Ulang</a>
+        <div class="footer-note">📍 Sekretariat:<br>Jl. Desa Tundagan RT 04/RW 04<br>Kecamatan Watukumpul, Kabupaten Pemalang</div>
+    </div>
+</div>
+
+<script>
+// ==========================================================
+// URL DATA
+// ==========================================================
+const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzHDND34xdfwwEjgmiz7M1-lLAYM4xvpuLzhoA3V8sObt5IH0kwaEh7n550fGK3vWdN1Q/exec";
+
+// KONTAK PANITIA
+const NOMOR_WA_PANITIA = "6283840674753";
+const NAMA_PANITIA = "Kusnandar";
+
+// LOKASI TPS SESUAI RW
+const LOKASI_RW = {
+  "001": "DUSUN TUNDAGAN",
+  "002": "DUSUN PEDAGUNG",
+  "003": "DUSUN REJESARI",
+  "004": "DUSUN SIRONGGE",
+  "005": "DUSUN JAHA"
+};
+
+let DATA_DPS = [];
+const TANGGAL_PILKADES = new Date(2026, 10, 9, 7, 0, 0);
+
+// AMBIL DATA LANGSUNG DARI GOOGLE SHEET
+function muatData() {
+    const status = document.getElementById("statusMuat");
+    fetch(URL_APPS_SCRIPT, { cache: "no-store" })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) throw new Error(data.error);
+            DATA_DPS = data;
+            status.innerHTML = "✅ Data siap. Total: " + DATA_DPS.length + " pemilih";
+        })
+        .catch(err => {
+            status.innerHTML = "⚠️ Gagal memuat data!";
+            console.error(err);
+        });
+}
+
+// HITUNG MUNDUR PILKADES
+function hitungMundur(){const e=new Date,t=TANGGAL_PILKADES-e;if(t<=0)return void(document.getElementById("cd-hari").textContent="0",document.getElementById("cd-jam").textContent="00",document.getElementById("cd-menit").textContent="00",document.getElementById("cd-detik").textContent="00");const n=Math.floor(t/864e5),i=Math.floor(t%864e5/36e5),s=Math.floor(t%36e5/6e4),o=Math.floor(t%6e4/1e3);document.getElementById("cd-hari").textContent=n,document.getElementById("cd-jam").textContent=String(i).padStart(2,"0"),document.getElementById("cd-menit").textContent=String(s).padStart(2,"0"),document.getElementById("cd-detik").textContent=String(o).padStart(2,"0")}
+hitungMundur();setInterval(hitungMundur,1e3);
+
+// SENSOR KK & NIK
+function sensorNomor(e){if(!e||e.length<8)return e;const t=e.substring(0,6),n=e.substring(e.length-2);return t+"******"+n}
+
+// NORMALISASI RW (jadi 3 digit)
+function ambilRW(data){
+    const rw = String(data.rw || "").trim();
+    if(rw.length===3) return rw;
+    const m = rw.match(/\d{1,3}/);
+    if(m){
+        const num = m[0];
+        return num.padStart(3,"0");
+    }
+    return "001";
+}
+
+// NORMALISASI RT
+function ambilRT(data){
+    const rt = String(data.rt || "").trim();
+    if(rt.length===3) return rt;
+    const m = rt.match(/\d{1,3}/);
+    if(m){
+        const num = m[0];
+        return num.padStart(3,"0");
+    }
+    return "001";
+}
+
+// PENGECEKAN NIK
+const step1=document.getElementById("step1"),step2=document.getElementById("step2"),nikInput=document.getElementById("nikInput"),btnCek=document.getElementById("btnCek"),resultArea=document.getElementById("resultArea"),nikError=document.getElementById("nikError");
+nikInput.addEventListener("input",()=>{nikInput.value=nikInput.value.replace(/[^0-9]/g,""),nikError.classList.add("hidden")});
+btnCek.addEventListener("click",cekDPS);
+
+function cekDPS(){const e=nikInput.value.trim();if(16!==e.length)return nikError.classList.remove("hidden"),void nikInput.focus();const t=DATA_DPS.find(t=>String(t.nik||"").trim()===e);tampilkanHasil(t,e)}
+
+function tampilkanHasil(e,t){step1.classList.add("hidden"),step2.classList.remove("hidden");if(e){const rw=ambilRW(e);const rt=ambilRT(e);const lokasi=LOKASI_RW[rw]||"Lokasi belum terdata";resultArea.innerHTML='<div class="result-box success"><h3>✅ Terdaftar dalam DPS</h3><div class="data-row"><div class="data-label">KK</div><div class="data-value">'+sensorNomor(e.kk)+'</div></div><div class="data-row"><div class="data-label">NIK</div><div class="data-value">'+sensorNomor(e.nik)+'</div></div><div class="data-row"><div class="data-label">Nama</div><div class="data-value">'+(e.nama||"—")+'</div></div><div class="data-row"><div class="data-label">Umur</div><div class="data-value">'+(e.umur||"—")+' Tahun</div></div><div class="data-row"><div class="data-label">RT</div><div class="data-value">'+rt+'</div></div><div class="data-row"><div class="data-label">RW</div><div class="data-value">'+rw+'</div></div><div class="data-row"><div class="data-label">Lokasi TPS</div><div class="data-value">'+lokasi+'</div></div></div>'}else{const pesanWA="Selamat siang, Bapak Kusnandar.%0A%0ASaya warga Desa Tundagan.%0ANIK "+t+"%0Abelum terdaftar dalam DPS.%0A%0AMohon bantuannya untuk dicek dan ditindaklanjuti. Untuk mempercepat proses verifikasi, saya lampirkan foto KTP dan KK.%0A%0ATerima kasih.";const linkWA="https://wa.me/"+NOMOR_WA_PANITIA+"?text="+pesanWA;resultArea.innerHTML='<div class="result-box notfound"><h3>❌ Belum Terdaftar dalam DPS</h3><div class="data-row"><div class="data-label">NIK</div><div class="data-value">'+t+'</div></div><div class="data-row"><div class="data-label">Keterangan</div><div class="data-value">NIK belum masuk daftar pemilih sementara</div></div><div class="data-row"><div class="data-label">Hubungi</div><div class="data-value">'+NAMA_PANITIA+' — Panitia Pemilihan Desa</div></div><a href="'+linkWA+'" target="_blank" rel="noopener"><button class="btn-wa">💬 Hubungi via WhatsApp</button></a></div>'}}
+
+function kembaliKeLangkah1(){step2.classList.add("hidden"),step1.classList.remove("hidden"),nikInput.value="",nikError.classList.add("hidden"),resultArea.innerHTML=""}
+
+// MUAT DATA SAAT HALAMAN DIBUKA
+muatData();
+</script>
+</body>
+</html>
