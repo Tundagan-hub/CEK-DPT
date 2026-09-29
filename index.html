@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CEK DPT ONLINE — Pilkades Tundagan 2026</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
@@ -12,13 +12,12 @@
         .header h1{font-size:18px;color:#1a202c;font-weight:800;text-transform:uppercase;line-height:1.4}
         .header h2{font-size:22px;color:#1e40af;font-weight:900;text-transform:uppercase;line-height:1.3;margin-top:6px}
 
-        /* === KOTAK HITUNG MUNDUR — TANPA KOTAK PER BAGIAN, SELALU 1 BARIS === */
         .countdown-box{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:18px 12px;border-radius:10px;text-align:center;margin-bottom:20px}
         .countdown-box h3{font-size:15px;font-weight:600;margin-bottom:6px}
         .countdown-date{font-size:14px;margin-bottom:12px;opacity:.95}
         .countdown-numbers{display:flex;justify-content:center;gap:2px;flex-wrap:nowrap;align-items:center}
         .cd-sep{font-size:18px;font-weight:700;opacity:.7;padding:0 2px}
-        .cd-item{background:transparent;border-radius:0;padding:0;min-width:auto;text-align:center}
+        .cd-item{text-align:center}
         .cd-val{font-size:22px;font-weight:700;line-height:1}
         .cd-lab{font-size:10px;opacity:.85;margin-top:2px}
 
@@ -29,30 +28,27 @@
 
         .form-group{margin-bottom:20px}
         label{display:block;font-size:14px;color:#374151;margin-bottom:6px;font-weight:500}
-        input{width:100%;padding:14px 14px;font-size:16px;border:1px solid #d1d5db;border-radius:8px;outline:none;-webkit-appearance:none}
+        input{width:100%;padding:14px;font-size:16px;border:1px solid #d1d5db;border-radius:8px;outline:none;-webkit-appearance:none}
         input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
 
-        button{width:100%;padding:14px;background:#2563eb;color:#fff;font-size:16px;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:all 0.3s ease;min-height:48px}
+        button{width:100%;padding:14px;background:#2563eb;color:#fff;font-size:16px;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:all .3s ease;min-height:48px}
         button:disabled{background:#94a3b8;cursor:not-allowed;opacity:.7}
         button:hover:not(:disabled){background:#1d4ed8}
 
-        .btn-wa{background:#22c55e;margin-top:24px;display:flex;align-items:center;justify-content:center;gap:8px;animation:bounce 2s ease-in-out infinite;transform-origin:center}
+        .btn-wa{background:#22c55e;margin-top:24px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;min-height:48px;color:#fff;font-size:16px;font-weight:600;border-radius:8px;text-decoration:none;animation:bounce 2s ease-in-out infinite}
         .btn-wa:hover{background:#16a34a;animation:none;transform:scale(1.08);box-shadow:0 4px 15px rgba(34,197,94,.4)}
         @keyframes bounce{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.05)}100%{transform:translateY(0) scale(1)}}
 
-        /* === PERBAIKAN UTAMA: TATA LETAK HASIL — RAPI DI LAYAR KECIL === */
         .result-box{margin-top:20px;padding:20px;border-radius:10px;display:none;box-shadow:0 2px 8px rgba(0,0,0,.04)}
         .result-box.success{display:block;background:#f0fdf4;border:1px solid #bbf7d0}
         .result-box.notfound{display:block;background:#fef2f2;border:1px solid #fecaca;text-align:center}
         .result-box h3{font-size:16px;margin-bottom:18px;color:#166534;text-align:center;font-weight:700}
         .result-box.notfound h3{color:#dc2626}
 
-        /* BARIS DATA: FLEKSIBEL, SEJAJAR, TIDAK BERANTAKAN */
         .data-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #d1d5db;font-size:15px;gap:8px}
         .data-row:last-child{border-bottom:none}
         .data-label{color:#4b5563;font-weight:500;flex-shrink:0}
         .data-value{color:#1f2937;font-weight:600;text-align:right;word-break:break-all;flex:1;min-width:0}
-        /* Agar RT/RW tetap satu baris */
         .data-value.nowrap{white-space:nowrap}
 
         .notfound-block{margin:18px 0;padding:0 4px}
@@ -65,11 +61,8 @@
 
         .hidden{display:none!important}
         .error-text{margin-top:6px;font-size:12px;color:#dc2626}
-        .loading{text-align:center;padding:10px;color:#4b5563;font-size:13px;line-height:1.5}
-        .loading strong{color:#2563eb}
-        .loading small{display:block;font-size:11px;color:#6b7280;margin-top:2px}
+        .status{text-align:center;padding:10px;color:#4b5563;font-size:13px;line-height:1.5}
 
-        /* PENYESUAIAN KHUSUS LAYAR KECIL */
         @media (max-width:360px){
             .cd-val{font-size:20px}
             .data-row{font-size:14px;padding:7px 0}
@@ -106,15 +99,12 @@
             <div class="step active">1</div><div class="step-line"></div><div class="step">2</div>
         </div>
         <div class="form-group">
-            <label>Masukkan Nomor Induk Kependudukan (NIK)</label>
-            <input type="text" id="nikInput" maxlength="16" placeholder="16 Digit NIK sesuai e-KTP">
+            <label for="nikInput">Masukkan Nomor Induk Kependudukan (NIK)</label>
+            <input type="text" id="nikInput" inputmode="numeric" maxlength="16" placeholder="16 Digit NIK sesuai e-KTP">
             <div id="nikError" class="error-text hidden">NIK harus 16 digit angka</div>
         </div>
-        <button id="btnCek" disabled>⏳ Sedang menyiapkan data...</button>
-        <div id="statusMuat" class="loading">
-            <strong>ⓘ</strong> Sedang menyiapkan data pemilih...
-            <small>Jumlah data cukup besar, mohon sabar sebentar ya</small>
-        </div>
+        <button id="btnCek">Cek Data Pemilih</button>
+        <div id="statusMuat" class="status"></div>
         <div class="footer-note">📍 Sekretariat:<br>Jl. Desa Tundagan RT 04/RW 04<br>Kecamatan Watukumpul, Kabupaten Pemalang</div>
     </div>
 
@@ -129,194 +119,112 @@
 </div>
 
 <script>
-// ==========================================================
-// URL DATA — TETAP PAKAI ALAMAT KAMU
-// ==========================================================
-const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzHDND34xdfwwEjgmiz7M1-lLAYM4xvpuLzhoA3V8sObt5IH0kwaEh7n550fGK3vWdN1Q/exec";
+// URL deployment Apps Script BARU (Deploy → New deployment → Web app)
+const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbww-nQbGOeuTO1ssmnO3H27mSxt2dka52ZbUsdNKhpm1NzxdOGeMnOqNDBiGf3gbRrq/exec";
 
-// KONTAK PANITIA
 const NOMOR_WA_PANITIA = "6283840674753";
 const NAMA_PANITIA = "Kusnandar";
 const JABATAN_PANITIA = "Sek. Pendaftaran Pemilih";
 
-// LOKASI TPS SESUAI RW
-const LOKASI_RW = {
-  "001": "DUSUN TUNDAGAN",
-  "002": "DUSUN PEDAGUNG",
-  "003": "DUSUN REJESARI",
-  "004": "DUSUN SIRONGGE",
-  "005": "DUSUN JAHA"
-};
+// Waktu pemungutan suara, eksplisit WIB
+const TANGGAL_PILKADES = new Date("2026-11-09T07:00:00+07:00");
 
-let DATA_DPS = [];
-const TANGGAL_PILKADES = new Date(2026, 10, 9, 7, 0, 0);
-const KADALUARSA_CACHE = 3600000; // 1 jam = data simpanan masih dianggap baru
+// Hapus data lama yang pernah tersimpan di HP pengunjung oleh versi sebelumnya
+try { localStorage.removeItem("dataDPS"); localStorage.removeItem("waktuSimpan"); } catch(e) {}
 
-// ==========================================================
-// ✅ PENGAMBILAN DATA CEPAT DENGAN CACHE
-// ==========================================================
-function muatData() {
-    const status = document.getElementById("statusMuat");
-    const btnCek = document.getElementById("btnCek");
-
-    // 1. Cek dulu: apakah sudah ada data simpanan yang masih baru?
-    const simpanan = localStorage.getItem("dataDPS");
-    const waktuSimpan = localStorage.getItem("waktuSimpan");
-    const SEKARANG = Date.now();
-
-    if (simpanan && waktuSimpan && (SEKARANG - waktuSimpan < KADALUARSA_CACHE)) {
-        try {
-            DATA_DPS = JSON.parse(simpanan);
-            status.innerHTML = "✅ Data pemilih siap diperiksa (dari simpanan)";
-            btnCek.disabled = false;
-            btnCek.innerHTML = "Cek Data Pemilih";
-            setTimeout(()=>status.innerHTML="", 2000);
-            return; // SELESAI — TIDAK PERLU AMBIL ULANG!
-        } catch(e) {
-            localStorage.removeItem("dataDPS");
-            localStorage.removeItem("waktuSimpan");
-        }
-    }
-
-    // 2. Belum ada / sudah lama → AMBIL BARU DARI SERVER
-    fetch(URL_APPS_SCRIPT, { cache: "force-cache" })
-        .then(res => res.json())
-        .then(data => {
-            if (data.error) throw new Error(data.error);
-            DATA_DPS = data;
-            // ✅ SIMPAN KE HP — lain kali buka langsung cepat!
-            localStorage.setItem("dataDPS", JSON.stringify(data));
-            localStorage.setItem("waktuSimpan", SEKARANG);
-            status.innerHTML = "✅ Data pemilih siap diperiksa";
-            btnCek.disabled = false;
-            btnCek.innerHTML = "Cek Data Pemilih";
-            setTimeout(()=>status.innerHTML="", 3000);
-        })
-        .catch(err => {
-            // Kalau gagal ambil baru TAPI masih ada simpanan lama → pakai dulu yang lama
-            if (simpanan) {
-                try {
-                    DATA_DPS = JSON.parse(simpanan);
-                    status.innerHTML = "⚠️ Pakai data simpanan; data baru gagal dimuat";
-                    btnCek.disabled = false;
-                    btnCek.innerHTML = "Cek Data Pemilih";
-                } catch(e) {
-                    status.innerHTML = "⚠️ Gagal memuat data! Tutup & buka ulang halaman.";
-                }
-            } else {
-                status.innerHTML = "⚠️ Gagal memuat data! Tutup & buka ulang halaman.";
-            }
-            console.error("Error muat data:", err);
-        });
-}
-
-// ==========================================================
-// HITUNG MUNDUR
-// ==========================================================
+// ---------- Hitung mundur ----------
 function hitungMundur(){
-    const selisih = TANGGAL_PILKADES - new Date();
-    if (selisih <= 0) {
-        document.getElementById("cd-hari").textContent="0";
-        document.getElementById("cd-jam").textContent="00";
-        document.getElementById("cd-menit").textContent="00";
-        document.getElementById("cd-detik").textContent="00";
-        return;
-    }
-    const hari = Math.floor(selisih / 86400000);
-    const jam = Math.floor((selisih % 86400000) / 3600000);
-    const menit = Math.floor((selisih % 3600000) / 60000);
-    const detik = Math.floor((selisih % 60000) / 1000);
-
-    document.getElementById("cd-hari").textContent = hari;
-    document.getElementById("cd-jam").textContent = String(jam).padStart(2,"0");
-    document.getElementById("cd-menit").textContent = String(menit).padStart(2,"0");
-    document.getElementById("cd-detik").textContent = String(detik).padStart(2,"0");
+    const s = Math.max(0, TANGGAL_PILKADES - new Date());
+    document.getElementById("cd-hari").textContent = Math.floor(s / 86400000);
+    document.getElementById("cd-jam").textContent = String(Math.floor((s % 86400000) / 3600000)).padStart(2,"0");
+    document.getElementById("cd-menit").textContent = String(Math.floor((s % 3600000) / 60000)).padStart(2,"0");
+    document.getElementById("cd-detik").textContent = String(Math.floor((s % 60000) / 1000)).padStart(2,"0");
 }
 hitungMundur();
 setInterval(hitungMundur, 1000);
 
-// ==========================================================
-// FUNGSI BANTUAN
-// ==========================================================
-function sensorNomor(teks){
-    if(!teks || teks.length < 8) return teks;
-    return teks.substring(0,6) + "******" + teks.substring(teks.length-2);
+// ---------- Fungsi bantu ----------
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function sensorNomor(t){
+    t = String(t || "");
+    return t.length < 8 ? esc(t) : esc(t.substring(0,6) + "******" + t.substring(t.length-2));
 }
 
-function ambilRW(data){
-    const rw = String(data.rw || "001").trim().replace(/\D/g,"");
-    return rw.padStart(3,"0");
+function pad3(v){
+    const d = String(v || "").replace(/\D/g,"");
+    return d ? d.padStart(3,"0") : "—";
 }
 
-function ambilRT(data){
-    const rt = String(data.rt || "001").trim().replace(/\D/g,"");
-    return rt.padStart(3,"0");
-}
+// ---------- Elemen ----------
+const step1 = document.getElementById("step1"),
+      step2 = document.getElementById("step2"),
+      nikInput = document.getElementById("nikInput"),
+      btnCek = document.getElementById("btnCek"),
+      resultArea = document.getElementById("resultArea"),
+      nikError = document.getElementById("nikError"),
+      statusMuat = document.getElementById("statusMuat");
 
-// ==========================================================
-// PENGECEKAN NIK
-// ==========================================================
-const step1=document.getElementById("step1"),
-      step2=document.getElementById("step2"),
-      nikInput=document.getElementById("nikInput"),
-      btnCek=document.getElementById("btnCek"),
-      resultArea=document.getElementById("resultArea"),
-      nikError=document.getElementById("nikError");
-
-nikInput.addEventListener("input",()=>{
-    nikInput.value=nikInput.value.replace(/[^0-9]/g,"");
-    if(nikInput.value.length>16) nikInput.value = nikInput.value.slice(0,16);
+nikInput.addEventListener("input", () => {
+    nikInput.value = nikInput.value.replace(/[^0-9]/g,"").slice(0,16);
     nikError.classList.add("hidden");
+    statusMuat.textContent = "";
 });
+nikInput.addEventListener("keydown", e => { if(e.key === "Enter") cekDPS(); });
+btnCek.addEventListener("click", cekDPS);
 
-btnCek.addEventListener("click",cekDPS);
-
-function cekDPS(){
-    if(DATA_DPS.length === 0){
-        document.getElementById("statusMuat").innerHTML = "⚠️ Data belum selesai dimuat, tunggu sebentar lagi";
-        return;
-    }
+// ---------- Cek NIK: server hanya mengirim 1 data yang cocok ----------
+async function cekDPS(){
     const nik = nikInput.value.trim();
     if(nik.length !== 16){
         nikError.classList.remove("hidden");
         nikInput.focus();
         return;
     }
-    const hasil = DATA_DPS.find(item => String(item.nik||"").trim() === nik);
-    tampilkanHasil(hasil, nik);
+    btnCek.disabled = true;
+    btnCek.textContent = "⏳ Memeriksa...";
+    statusMuat.textContent = "";
+    try{
+        const res = await fetch(URL_APPS_SCRIPT + "?nik=" + encodeURIComponent(nik));
+        const json = await res.json();
+        if(json.error) throw new Error(json.error);
+        tampilkanHasil(json.ditemukan ? json.data : null, nik);
+    }catch(err){
+        statusMuat.textContent = "⚠️ Gagal memeriksa data. Periksa sinyal lalu coba lagi.";
+        console.error("Error cek DPS:", err);
+    }finally{
+        btnCek.disabled = false;
+        btnCek.textContent = "Cek Data Pemilih";
+    }
 }
 
-// ==========================================================
-// TAMPILKAN HASIL
-// ==========================================================
+// ---------- Tampilkan hasil ----------
 function tampilkanHasil(data, nik){
     step1.classList.add("hidden");
     step2.classList.remove("hidden");
 
     if(data){
-        const rw=ambilRW(data);
-        const rt=ambilRT(data);
-        const lokasi=LOKASI_RW[rw]||"Lokasi belum terdata";
-        resultArea.innerHTML=`
+        const lokasi = data.dusun ? esc(data.dusun) : "Lokasi belum terdata";
+        resultArea.innerHTML = `
         <div class="result-box success">
             <h3>✅ Terdaftar dalam DPS</h3>
             <div class="data-row"><div class="data-label">KK</div><div class="data-value">${sensorNomor(data.kk)}</div></div>
             <div class="data-row"><div class="data-label">NIK</div><div class="data-value">${sensorNomor(data.nik)}</div></div>
-            <div class="data-row"><div class="data-label">Nama</div><div class="data-value">${data.nama || "—"}</div></div>
-            <div class="data-row"><div class="data-label">Umur</div><div class="data-value">${data.umur || "—"} Tahun</div></div>
-            <div class="data-row"><div class="data-label">RT/RW</div><div class="data-value nowrap">${rt} / ${rw}</div></div>
+            <div class="data-row"><div class="data-label">Nama</div><div class="data-value">${esc(data.nama) || "—"}</div></div>
+            <div class="data-row"><div class="data-label">Umur</div><div class="data-value">${esc(data.umur) || "—"} Tahun</div></div>
+            <div class="data-row"><div class="data-label">RT/RW</div><div class="data-value nowrap">${pad3(data.rt)} / ${pad3(data.rw)}</div></div>
             <div class="data-row"><div class="data-label">Lokasi TPS</div><div class="data-value">${lokasi}</div></div>
         </div>`;
     }else{
-        const pesanWA=`Selamat siang, Bapak Kusnandar.%0A%0ASaya warga Desa Tundagan.%0ANIK: ${nik}%0Abelum terdaftar dalam DPS.%0A%0AMohon bantuannya untuk dicek dan ditindaklanjuti. Untuk mempercepat proses verifikasi, saya siap melampirkan foto KTP dan KK.%0A%0ATerima kasih.`;
-        const linkWA=`https://wa.me/${NOMOR_WA_PANITIA}?text=${pesanWA}`;
-        resultArea.innerHTML=`
+        const pesan = `Selamat siang, Bapak ${NAMA_PANITIA}.\n\nSaya warga Desa Tundagan.\nNIK: ${nik}\nbelum terdaftar dalam DPS.\n\nMohon bantuannya untuk dicek dan ditindaklanjuti. Untuk mempercepat proses verifikasi, saya siap melampirkan foto KTP dan KK.\n\nTerima kasih.`;
+        const linkWA = `https://wa.me/${NOMOR_WA_PANITIA}?text=${encodeURIComponent(pesan)}`;
+        resultArea.innerHTML = `
         <div class="result-box notfound">
             <h3>❌ Belum Terdaftar dalam DPS</h3>
-            <div class="notfound-block"><div class="notfound-label">NIK</div><div class="notfound-value">${nik}</div></div>
+            <div class="notfound-block"><div class="notfound-label">NIK</div><div class="notfound-value">${esc(nik)}</div></div>
             <div class="notfound-block"><div class="notfound-label">Keterangan</div><div class="notfound-value">NIK belum masuk daftar pemilih sementara (DPS)</div></div>
-            <div class="notfound-block"><div class="notfound-label">Hubungi</div><div class="notfound-value">${NAMA_PANITIA} (${JABATAN_PANITIA})</div></div>
-            <a href="${linkWA}" target="_blank" rel="noopener"><button class="btn-wa">💬 Hubungi via WhatsApp</button></a>
+            <div class="notfound-block"><div class="notfound-label">Hubungi</div><div class="notfound-value">${esc(NAMA_PANITIA)} (${esc(JABATAN_PANITIA)})</div></div>
+            <a class="btn-wa" href="${linkWA}" target="_blank" rel="noopener">💬 Hubungi via WhatsApp</a>
         </div>`;
     }
 }
@@ -324,15 +232,11 @@ function tampilkanHasil(data, nik){
 function kembaliKeLangkah1(){
     step2.classList.add("hidden");
     step1.classList.remove("hidden");
-    nikInput.value="";
+    nikInput.value = "";
     nikError.classList.add("hidden");
-    resultArea.innerHTML="";
+    statusMuat.textContent = "";
+    resultArea.innerHTML = "";
 }
-
-// ==========================================================
-// MULAI MUAT DATA
-// ==========================================================
-muatData();
 </script>
 </body>
 </html>
