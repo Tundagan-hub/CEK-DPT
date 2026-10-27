@@ -207,7 +207,7 @@ function tampilkanHasil(data, nik){
         const lokasi = data.dusun ? esc(data.dusun) : "Lokasi belum terdata";
         resultArea.innerHTML = `
         <div class="result-box success">
-            <h3>✅ TERDAFTAR DALAM DAFTAR PEMILIH TETAP (DPT) AHIR</h3>
+            <h3>✅ TERDAFTAR DALAM DAFTAR PEMILIH TETAP (DPT)</h3>
             <div class="data-row"><div class="data-label">KK</div><div class="data-value">${sensorNomor(data.kk)}</div></div>
             <div class="data-row"><div class="data-label">NIK</div><div class="data-value">${sensorNomor(data.nik)}</div></div>
             <div class="data-row"><div class="data-label">Nama</div><div class="data-value">${esc(data.nama) || "—"}</div></div>
